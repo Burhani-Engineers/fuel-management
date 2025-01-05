@@ -1,27 +1,90 @@
-body { 
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+:root {
+    --forest-green: #2C5530;
+    --forest-green-light: #3D7445;
+    --forest-green-dark: #1A331D;
+    --grey-100: #f3f4f6;
+    --grey-200: #e5e7eb;
+    --grey-300: #d1d5db;
+    --grey-400: #9ca3af;
+    --grey-500: #6b7280;
+    --grey-600: #4b5563;
+    --grey-700: #374151;
+}
+
+body {
+    background-color: var(--grey-100);
+    color: var(--grey-700);
 }
 
 .tab {
-    padding: 10px 20px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-    cursor: pointer;
+    background-color: white;
+    border: 1px solid var(--grey-300);
+    transition: all 0.2s ease;
+}
+
+.tab:hover {
+    background-color: var(--grey-100);
 }
 
 .tab.active {
-    background: #2B513B;
+    background-color: var(--forest-green);
     color: white;
-    border-color: #2B513B;
+    border-color: var(--forest-green);
+}
+
+input, select {
+    border-color: var(--grey-300) !important;
+    transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--forest-green) !important;
+    box-shadow: 0 0 0 2px rgba(44, 85, 48, 0.1);
+}
+
+button[type="submit"] {
+    background-color: var(--forest-green) !important;
+    transition: all 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--forest-green-light) !important;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 90%;
+    max-width: 500px;
+}
+
+.modal h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 
 .form-container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+    display: none;
 }
