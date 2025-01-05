@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Burhani Engineers - Fuel Management</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide-iife.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 </head>
@@ -11,17 +14,48 @@
             <h1 class="text-2xl font-bold">Burhani Engineers</h1>
             <p class="text-gray-600">Fuel Management Dashboard</p>
         </div>
-        
+
         <!-- Tabs -->
-        <div id="tabs" class="mb-6">
-            <button class="tab active" data-tab="requisition">Fuel Requisition</button>
-            <button class="tab" data-tab="filling">Fuel Filling</button>
+        <div class="mb-6">
+            <div class="grid grid-cols-2 gap-2 mb-4">
+                <button class="tab active p-3 rounded border flex items-center justify-center gap-2" data-tab="requisition">
+                    <i data-lucide="file-text"></i>
+                    Fuel Requisition
+                </button>
+                <button class="tab p-3 rounded border flex items-center justify-center gap-2" data-tab="filling">
+                    <i data-lucide="fuel"></i>
+                    Fuel Filling
+                </button>
+            </div>
         </div>
 
-        <!-- Forms will go here -->
-        <div id="forms"></div>
-    </div>
+        <!-- Dynamic Form Container -->
+        <div id="form-container"></div>
 
-    <script src="script.js"></script>
+        <!-- Add Vehicle Modal -->
+        <div id="add-vehicle-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Add New Vehicle</h3>
+                <input type="text" id="new-vehicle-input" placeholder="Enter vehicle number" class="w-full p-2 border rounded mb-4">
+                <div class="flex justify-end gap-2">
+                    <button onclick="closeModal('add-vehicle-modal')" class="px-4 py-2 border rounded">Cancel</button>
+                    <button onclick="addNewVehicle()" class="px-4 py-2 bg-green-700 text-white rounded">Add Vehicle</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Project Modal -->
+        <div id="add-project-modal" class="modal hidden">
+            <div class="modal-content">
+                <h3>Add New Project</h3>
+                <input type="text" id="new-project-code" placeholder="Enter project code" class="w-full p-2 border rounded mb-2">
+                <input type="text" id="new-project-name" placeholder="Enter project name" class="w-full p-2 border rounded mb-4">
+                <div class="flex justify-end gap-2">
+                    <button onclick="closeModal('add-project-modal')" class="px-4 py-2 border rounded">Cancel</button>
+                    <button onclick="addNewProject()" class="px-4 py-2 bg-green-700 text-white rounded">Add Project</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
