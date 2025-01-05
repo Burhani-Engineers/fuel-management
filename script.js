@@ -20,6 +20,41 @@ let requisitions = [
     }
 ];
 
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    initializeTabs();
+    renderCurrentForm();
+    lucide.createIcons(); // Initialize icons
+});
+
+// Tab Management
+function initializeTabs() {
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            renderCurrentForm();
+        });
+    });
+}
+
+function getActiveTab() {
+    return document.querySelector('.tab.active').dataset.tab;
+}
+
+function renderCurrentForm() {
+    const container = document.getElementById('form-container');
+    const activeTab = getActiveTab();
+    
+    if (activeTab === 'requisition') {
+        container.innerHTML = createRequisitionForm();
+    } else {
+        container.innerHTML = createFillingForm();
+    }
+    lucide.createIcons(); // Refresh icons
+}
+
 // Form Generation
 function createRequisitionForm() {
     return `
@@ -66,7 +101,6 @@ function createRequisitionForm() {
         </div>
     `;
 }
-
 function createFillingForm() {
     return `
         <div class="form-container">
@@ -83,14 +117,16 @@ function createFillingForm() {
                     </select>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Vehicle Number</label>
-                    <input type="text" class="w-full p-2 border rounded bg-gray-50" id="filling-vehicle" disabled>
-                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Vehicle Number</label>
+                        <input type="text" class="w-full p-2 border rounded bg-gray-50" id="filling-vehicle" disabled>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Project Code</label>
-                    <input type="text" class="w-full p-2 border rounded bg-gray-50" id="filling-project" disabled>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Project Code</label>
+                        <input type="text" class="w-full p-2 border rounded bg-gray-50" id="filling-project" disabled>
+                    </div>
                 </div>
 
                 <div>
@@ -98,16 +134,18 @@ function createFillingForm() {
                     <input type="number" class="w-full p-2 border rounded" id="filling-mileage">
                 </div>
 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Litres Filled</label>
-                    <input type="number" class="w-full p-2 border rounded" id="filling-litres" 
-                           onchange="calculateTotal()">
-                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Litres Filled</label>
+                        <input type="number" class="w-full p-2 border rounded" id="filling-litres" 
+                               onchange="calculateTotal()">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Price per Litre (KES)</label>
-                    <input type="number" class="w-full p-2 border rounded" id="filling-price"
-                           onchange="calculateTotal()">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Price per Litre (KES)</label>
+                        <input type="number" class="w-full p-2 border rounded" id="filling-price"
+                               onchange="calculateTotal()">
+                    </div>
                 </div>
 
                 <div>
@@ -192,4 +230,32 @@ function submitFilling() {
 
 // Modal Management
 function openModal(modalId) {
-    document.getElementById(modalId).classList.remove
+    document.getElementById(modalId).classList.remove('hidden');
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+}
+
+function addNewVehicle() {
+    const vehicle = document.getElementById('new-vehicle-input').value;
+    if (vehicle && !vehicles.includes(vehicle)) {
+        vehicles.push(vehicle);
+        closeModal('add-vehicle-modal');
+        document.getElementById('new-vehicle-input').value = '';
+        renderCurrentForm();
+    }
+}
+
+function addNewProject() {
+    const code = document.getElementById('new-project-code').value;
+    const name = document.getElementById('new-project-name').value;
+    
+    if (code && name && !projects.find(p => p.code === code)) {
+        projects.push({ code, name });
+        closeModal('add-project-modal');
+        document.getElementById('new-project-code').value = '';
+        document.getElementById('new-project-name').value = '';
+        renderCurrentForm();
+    }
+}
