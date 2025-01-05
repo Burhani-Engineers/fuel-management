@@ -1,0 +1,27 @@
+body { 
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+}
+
+.tab.active {
+    background: #2B513B;
+    color: white;
+    border-color: #2B513B;
+}
+
+.form-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
