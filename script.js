@@ -2,9 +2,7 @@
 const vehicles = [
     'KBH 952V', 'KBM 190H', 'KBP 540Q', 'KCK 951W', 'KCN 684B', 
     'KCQ 103H', 'KCQ 251B', 'KCQ 257Q', 'KCR 853N', 'KCU 452S',
-    'KCU 967G', 'KCV 952J', 'KCW 914H', 'KCW 952C', 'KCW 953C',
-    'KCZ 652S', 'KDC 153R', 'KDD 553V', 'KDH 113Y', 'KDJ 027M',
-    'KDJ 028M', 'KDJ 184S', 'KDL 153W', 'KDM 452W', 'KDM 752Y'
+    'KCU 967G', 'KCV 952J', 'KCW 914H', 'KCW 952C', 'KCW 953C'
 ];
 
 const projects = [
@@ -12,204 +10,187 @@ const projects = [
     { code: '51105', name: 'Project 51105' },
     { code: '51166', name: 'Project 51166' },
     { code: '51212', name: 'Project 51212' },
-    { code: '51268', name: 'Project 51268' },
-    { code: '51302', name: 'Project 51302' },
-    { code: '51307', name: 'Project 51307' },
-    { code: '51336', name: 'Project 51336' }
+    { code: '51268', name: 'Project 51268' }
 ];
 
-// Wait for DOM to be fully loaded
+// Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM fully loaded');
-    initializeApp();
+    console.log('Initializing application...');
+    
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Initialize dropdowns
+    initializeDropdowns();
+    
+    // Setup tab switching
+    setupTabs();
+    
+    // Setup form handlers
+    setupFormHandlers();
+    
+    // Set default date
+    setDefaultDates();
+
+    // Add initial requisition form
+    addRequisitionForm();
 });
 
-function initializeApp() {
-    // Initialize Lucide icons
-    if (window.lucide) {
-        window.lucide.createIcons();
-    }
-
-    // Immediately populate dropdowns
-    populateAllDropdowns();
-
-    // Set up event listeners for tabs
-    setupTabs();
-
-    // Initialize requisition form
-    createRequisitionForm();
-
-    // Set up other event listeners
-    setupEventListeners();
-}
-
-function populateAllDropdowns() {
-    console.log('Populating dropdowns');
+function initializeDropdowns() {
+    console.log('Initializing dropdowns...');
     
-    // Get all vehicle dropdowns
-    const vehicleDropdowns = document.querySelectorAll('select[data-type="vehicle"]');
-    console.log('Found vehicle dropdowns:', vehicleDropdowns.length);
-    
-    vehicleDropdowns.forEach(dropdown => {
-        // Clear existing options
-        dropdown.innerHTML = '<option value="">Select Vehicle</option>';
-        
-        // Add new options
+    // Initialize vehicle dropdowns
+    const vehicleSelect = document.getElementById('vehicleSelect');
+    if (vehicleSelect) {
         vehicles.forEach(vehicle => {
             const option = document.createElement('option');
             option.value = vehicle;
             option.textContent = vehicle;
-            dropdown.appendChild(option);
+            vehicleSelect.appendChild(option);
         });
-    });
+    }
 
-    // Get all project dropdowns
-    const projectDropdowns = document.querySelectorAll('select[data-type="project"]');
-    console.log('Found project dropdowns:', projectDropdowns.length);
-    
-    projectDropdowns.forEach(dropdown => {
-        // Clear existing options
-        dropdown.innerHTML = '<option value="">Select Project</option>';
-        
-        // Add new options
+    // Initialize project dropdowns
+    const projectSelect = document.getElementById('projectSelect');
+    if (projectSelect) {
         projects.forEach(project => {
             const option = document.createElement('option');
             option.value = project.code;
             option.textContent = `${project.code} - ${project.name}`;
-            dropdown.appendChild(option);
+            projectSelect.appendChild(option);
         });
-    });
+    }
 }
 
 function setupTabs() {
-    const tabs = document.querySelectorAll('.tab');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => {
-                c.classList.add('hidden');
-                c.classList.remove('active');
-            });
+    const fillingTab = document.getElementById('fillingTab');
+    const requisitionTab = document.getElementById('requisitionTab');
+    const fillingContent = document.getElementById('fillingContent');
+    const requisitionContent = document.getElementById('requisitionContent');
 
-            tab.classList.add('active');
-            const targetId = tab.getAttribute('data-tab');
-            const targetContent = document.getElementById(targetId);
-            if (targetContent) {
-                targetContent.classList.remove('hidden');
-                targetContent.classList.add('active');
-            }
-        });
+    fillingTab.addEventListener('click', () => {
+        fillingTab.classList.add('active');
+        requisitionTab.classList.remove('active');
+        fillingContent.classList.remove('hidden');
+        requisitionContent.classList.add('hidden');
+    });
+
+    requisitionTab.addEventListener('click', () => {
+        requisitionTab.classList.add('active');
+        fillingTab.classList.remove('active');
+        requisitionContent.classList.remove('hidden');
+        fillingContent.classList.add('hidden');
     });
 }
 
-// Rest of your script.js remains the same...
+function setupFormHandlers() {
+    // Fuel Filling Form Handler
+    const fillingForm = document.getElementById('fillingForm');
+    if (fillingForm) {
+        fillingForm.addEventListener('submit', handleFillingSubmit);
+    }
 
-let formCount = 0;
-const formData = {};
+    // Requisition Form Handlers
+    const addVehicleBtn = document.getElementById('addVehicleBtn');
+    if (addVehicleBtn) {
+        addVehicleBtn.addEventListener('click', addRequisitionForm);
+    }
 
-function createRequisitionForm() {
-    formCount++;
-    const form = document.createElement('div');
-    form.className = 'bg-white rounded-lg shadow p-6 mb-4';
-    form.innerHTML = `
-        <h3 class="text-sm font-bold mb-4">Vehicle ${formCount}</h3>
-        <form class="space-y-4" data-form="${formCount}">
+    const submitAllBtn = document.getElementById('submitAllBtn');
+    if (submitAllBtn) {
+        submitAllBtn.addEventListener('click', handleRequisitionSubmit);
+    }
+}
+
+function setDefaultDates() {
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+    const today = new Date().toISOString().split('T')[0];
+    dateInputs.forEach(input => {
+        input.value = today;
+    });
+}
+
+let requisitionFormCount = 0;
+const requisitionData = {};
+
+function addRequisitionForm() {
+    requisitionFormCount++;
+    
+    const requisitionForms = document.getElementById('requisitionForms');
+    const newForm = document.createElement('div');
+    newForm.className = 'bg-white rounded-lg shadow-lg p-6 mb-6';
+    newForm.id = `requisitionForm${requisitionFormCount}`;
+    
+    newForm.innerHTML = `
+        <h3 class="text-lg font-semibold mb-4">Vehicle ${requisitionFormCount}</h3>
+        <form class="space-y-4" data-form-id="${requisitionFormCount}">
             <div>
-                <label class="block text-sm font-medium mb-1">Vehicle Number</label>
-                <select class="w-full p-2 border rounded" data-type="vehicle" required>
+                <label class="block text-sm font-medium mb-2">Vehicle Number</label>
+                <select name="vehicle" class="w-full p-3 border rounded-md" required>
                     <option value="">Select Vehicle</option>
                     ${vehicles.map(v => `<option value="${v}">${v}</option>`).join('')}
                 </select>
             </div>
-
+            
             <div>
-                <label class="block text-sm font-medium mb-1">Project Code</label>
-                <select class="w-full p-2 border rounded" data-type="project" required>
+                <label class="block text-sm font-medium mb-2">Project Code</label>
+                <select name="project" class="w-full p-3 border rounded-md" required>
                     <option value="">Select Project</option>
                     ${projects.map(p => `<option value="${p.code}">${p.code} - ${p.name}</option>`).join('')}
                 </select>
             </div>
-
+            
             <div>
-                <label class="block text-sm font-medium mb-1">Requisition Date</label>
-                <input type="date" class="w-full p-2 border rounded" required>
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium mb-1">Fuel Amount Required</label>
-                <input type="number" class="w-full p-2 border rounded" placeholder="Enter amount" required>
+                <label class="block text-sm font-medium mb-2">Amount Required (KES)</label>
+                <input type="number" name="amount" class="w-full p-3 border rounded-md" required>
             </div>
         </form>
     `;
 
-    const requisitionForms = document.getElementById('requisition-forms');
-    if (requisitionForms) {
-        requisitionForms.appendChild(form);
-    }
+    requisitionForms.appendChild(newForm);
 
     // Add form change listener
-    const newForm = form.querySelector('form');
-    if (newForm) {
-        newForm.addEventListener('change', handleFormChange);
+    const form = newForm.querySelector('form');
+    form.addEventListener('change', (e) => {
+        const formId = e.currentTarget.getAttribute('data-form-id');
+        requisitionData[formId] = requisitionData[formId] || {};
         
-        // Set default date
-        const dateInput = newForm.querySelector('input[type="date"]');
-        if (dateInput) {
-            dateInput.value = new Date().toISOString().split('T')[0];
-        }
-    }
+        const field = e.target;
+        requisitionData[formId][field.name] = field.value;
+    });
 }
 
-function handleFormChange(e) {
-    const form = e.currentTarget;
-    const formNumber = form.getAttribute('data-form');
-    formData[formNumber] = formData[formNumber] || {};
+async function handleFillingSubmit(event) {
+    event.preventDefault();
     
-    const target = e.target;
-    if (target instanceof HTMLSelectElement) {
-        if (target.getAttribute('data-type') === 'vehicle') {
-            formData[formNumber].vehicle = target.value;
-        } else if (target.getAttribute('data-type') === 'project') {
-            formData[formNumber].project = target.value;
-        }
-    } else if (target instanceof HTMLInputElement) {
-        if (target.type === 'number') {
-            formData[formNumber].amount = parseFloat(target.value) || 0;
-        } else if (target.type === 'date') {
-            formData[formNumber].date = target.value;
-        }
-    }
-}
-
-function setupEventListeners() {
-    // Add vehicle button
-    const addVehicleBtn = document.getElementById('add-vehicle');
-    if (addVehicleBtn) {
-        addVehicleBtn.addEventListener('click', createRequisitionForm);
-    }
-
-    // Submit all button
-    const submitAllBtn = document.getElementById('submit-all');
-    if (submitAllBtn) {
-        submitAllBtn.addEventListener('click', handleRequisitionSubmit);
-    }
-
-    // Fuel filling form
-    const fillingForm = document.querySelector('#filling form');
-    if (fillingForm) {
-        fillingForm.addEventListener('submit', handleFillingSubmit);
+    try {
+        const formData = new FormData(event.target);
+        console.log('Filling Form Data:', Object.fromEntries(formData));
+        
+        // Here you would typically send the data to your backend
+        alert('Fuel filling submitted successfully!');
+        event.target.reset();
+        setDefaultDates();
+        
+    } catch (error) {
+        console.error('Error submitting filling form:', error);
+        alert('Error submitting form. Please try again.');
     }
 }
 
 async function handleRequisitionSubmit() {
     try {
-        // Validate all forms
-        const forms = document.querySelectorAll('[data-form]');
+        // Validate forms
+        const forms = document.querySelectorAll('#requisitionForms form');
         let isValid = true;
-        
+        let totalAmount = 0;
+
         forms.forEach(form => {
-            const requiredFields = form.querySelectorAll('[required]');
-            requiredFields.forEach(field => {
+            const formId = form.getAttribute('data-form-id');
+            const formData = requisitionData[formId] || {};
+
+            // Check required fields
+            form.querySelectorAll('[required]').forEach(field => {
                 if (!field.value) {
                     isValid = false;
                     field.classList.add('border-red-500');
@@ -217,58 +198,10 @@ async function handleRequisitionSubmit() {
                     field.classList.remove('border-red-500');
                 }
             });
-        });
 
-        if (!isValid) {
-            throw new Error('Please fill in all required fields');
-        }
-
-        const total = Object.values(formData).reduce((sum, form) => {
-            return sum + (form.amount || 0);
-        }, 0);
-        
-        const totalAmountElement = document.getElementById('total-amount');
-        if (totalAmountElement) {
-            totalAmountElement.textContent = total.toLocaleString();
-        }
-        
-        const totalAlert = document.getElementById('total-alert');
-        if (totalAlert) {
-            totalAlert.classList.remove('hidden');
-        }
-        
-        console.log('Requisition Data:', formData);
-        console.log('Total Amount:', total);
-        
-        alert('Requisition submitted successfully!');
-    } catch (error) {
-        alert(error.message || 'An error occurred while submitting the requisition');
-    }
-}
-
-async function handleFillingSubmit(e) {
-    e.preventDefault();
-    
-    try {
-        const form = e.currentTarget;
-        const formElements = form.elements;
-        let isValid = true;
-        const fillingData = {};
-
-        // Validate and collect form data
-        Array.from(formElements).forEach(element => {
-            if (element instanceof HTMLInputElement || element instanceof HTMLSelectElement) {
-                if (element.required && !element.value) {
-                    isValid = false;
-                    element.classList.add('border-red-500');
-                } else {
-                    element.classList.remove('border-red-500');
-                    if (element.type === 'file') {
-                        fillingData.receipt = element.files?.[0];
-                    } else {
-                        fillingData[element.name || element.id || element.getAttribute('data-type')] = element.value;
-                    }
-                }
+            // Add to total
+            if (formData.amount) {
+                totalAmount += parseFloat(formData.amount);
             }
         });
 
@@ -276,11 +209,23 @@ async function handleFillingSubmit(e) {
             throw new Error('Please fill in all required fields');
         }
 
-        console.log('Filling Data:', fillingData);
-        alert('Fuel filling form submitted successfully!');
-        form.reset();
+        // Update total display
+        const totalAmountElement = document.getElementById('totalAmount');
+        const totalAlert = document.getElementById('totalAlert');
+        
+        if (totalAmountElement && totalAlert) {
+            totalAmountElement.textContent = totalAmount.toLocaleString();
+            totalAlert.classList.remove('hidden');
+        }
+
+        console.log('Requisition Data:', requisitionData);
+        console.log('Total Amount:', totalAmount);
+
+        // Here you would typically send the data to your backend
+        alert('Requisitions submitted successfully!');
         
     } catch (error) {
-        alert(error.message || 'An error occurred while submitting the form');
+        console.error('Error submitting requisitions:', error);
+        alert(error.message || 'Error submitting requisitions. Please try again.');
     }
 }
