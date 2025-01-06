@@ -2,7 +2,8 @@
 const vehicles = [
     'KBH 952V', 'KBM 190H', 'KBP 540Q', 'KCK 951W', 'KCN 684B', 
     'KCQ 103H', 'KCQ 251B', 'KCQ 257Q', 'KCR 853N', 'KCU 452S',
-    'KCU 967G', 'KCV 952J', 'KCW 914H', 'KCW 952C', 'KCW 953C'
+    'KCU 967G', 'KCV 952J', 'KCW 914H', 'KCW 952C', 'KCW 953C',
+    'KCZ 652S', 'KDC 153R', 'KDD 553V', 'KDH 113Y', 'KDJ 027M'
 ];
 
 const projects = [
@@ -10,36 +11,34 @@ const projects = [
     { code: '51105', name: 'Project 51105' },
     { code: '51166', name: 'Project 51166' },
     { code: '51212', name: 'Project 51212' },
-    { code: '51268', name: 'Project 51268' }
+    { code: '51268', name: 'Project 51268' },
+    { code: '51302', name: 'Project 51302' },
+    { code: '51307', name: 'Project 51307' }
 ];
 
 // Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initializing application...');
-    
-    // Initialize Lucide icons
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize icons
     lucide.createIcons();
-    
-    // Initialize dropdowns
-    initializeDropdowns();
-    
-    // Setup tab switching
-    setupTabs();
-    
-    // Setup form handlers
-    setupFormHandlers();
-    
-    // Set default date
-    setDefaultDates();
 
-    // Add initial requisition form
-    addRequisitionForm();
+    // Initialize dropdowns
+    populateDropdowns();
+
+    // Setup tabs
+    setupTabs();
+
+    // Form handlers
+    setupFormHandlers();
+
+    // Create initial requisition form
+    createRequisitionForm();
+
+    // Set default dates
+    setDefaultDate();
 });
 
-function initializeDropdowns() {
-    console.log('Initializing dropdowns...');
-    
-    // Initialize vehicle dropdowns
+function populateDropdowns() {
+    // Populate vehicle dropdowns
     const vehicleSelect = document.getElementById('vehicleSelect');
     if (vehicleSelect) {
         vehicles.forEach(vehicle => {
@@ -50,7 +49,7 @@ function initializeDropdowns() {
         });
     }
 
-    // Initialize project dropdowns
+    // Populate project dropdowns
     const projectSelect = document.getElementById('projectSelect');
     if (projectSelect) {
         projects.forEach(project => {
@@ -83,17 +82,25 @@ function setupTabs() {
     });
 }
 
+function setDefaultDate() {
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+        input.value = today;
+    });
+}
+
+// Form Handlers
 function setupFormHandlers() {
-    // Fuel Filling Form Handler
+    // Filling Form
     const fillingForm = document.getElementById('fillingForm');
     if (fillingForm) {
         fillingForm.addEventListener('submit', handleFillingSubmit);
     }
 
-    // Requisition Form Handlers
+    // Requisition Form
     const addVehicleBtn = document.getElementById('addVehicleBtn');
     if (addVehicleBtn) {
-        addVehicleBtn.addEventListener('click', addRequisitionForm);
+        addVehicleBtn.addEventListener('click', createRequisitionForm);
     }
 
     const submitAllBtn = document.getElementById('submitAllBtn');
@@ -102,130 +109,80 @@ function setupFormHandlers() {
     }
 }
 
-function setDefaultDates() {
-    const dateInputs = document.querySelectorAll('input[type="date"]');
-    const today = new Date().toISOString().split('T')[0];
-    dateInputs.forEach(input => {
-        input.value = today;
-    });
-}
+let formCount = 0;
+const formData = {};
 
-let requisitionFormCount = 0;
-const requisitionData = {};
-
-function addRequisitionForm() {
-    requisitionFormCount++;
-    
-    const requisitionForms = document.getElementById('requisitionForms');
-    const newForm = document.createElement('div');
-    newForm.className = 'bg-white rounded-lg shadow-lg p-6 mb-6';
-    newForm.id = `requisitionForm${requisitionFormCount}`;
-    
-    newForm.innerHTML = `
-        <h3 class="text-lg font-semibold mb-4">Vehicle ${requisitionFormCount}</h3>
-        <form class="space-y-4" data-form-id="${requisitionFormCount}">
+function createRequisitionForm() {
+    formCount++;
+    const form = document.createElement('div');
+    form.className = 'bg-white rounded-lg shadow p-6 mb-4';
+    form.innerHTML = `
+        <h3 class="text-sm font-bold mb-4">Vehicle ${formCount}</h3>
+        <form class="space-y-4" data-form="${formCount}">
             <div>
-                <label class="block text-sm font-medium mb-2">Vehicle Number</label>
-                <select name="vehicle" class="w-full p-3 border rounded-md" required>
+                <label class="block text-sm font-medium mb-1">Vehicle Number</label>
+                <select class="w-full p-2 border rounded" required>
                     <option value="">Select Vehicle</option>
                     ${vehicles.map(v => `<option value="${v}">${v}</option>`).join('')}
                 </select>
             </div>
-            
+
             <div>
-                <label class="block text-sm font-medium mb-2">Project Code</label>
-                <select name="project" class="w-full p-3 border rounded-md" required>
+                <label class="block text-sm font-medium mb-1">Project Code</label>
+                <select class="w-full p-2 border rounded" required>
                     <option value="">Select Project</option>
                     ${projects.map(p => `<option value="${p.code}">${p.code} - ${p.name}</option>`).join('')}
                 </select>
             </div>
-            
+
             <div>
-                <label class="block text-sm font-medium mb-2">Amount Required (KES)</label>
-                <input type="number" name="amount" class="w-full p-3 border rounded-md" required>
+                <label class="block text-sm font-medium mb-1">Fuel Amount Required</label>
+                <input type="number" class="w-full p-2 border rounded" placeholder="Enter amount" required>
             </div>
         </form>
     `;
 
-    requisitionForms.appendChild(newForm);
+    document.getElementById('requisitionForms').appendChild(form);
 
     // Add form change listener
-    const form = newForm.querySelector('form');
-    form.addEventListener('change', (e) => {
-        const formId = e.currentTarget.getAttribute('data-form-id');
-        requisitionData[formId] = requisitionData[formId] || {};
-        
-        const field = e.target;
-        requisitionData[formId][field.name] = field.value;
+    form.querySelector('form').addEventListener('change', (e) => {
+        const formNumber = e.currentTarget.dataset.form;
+        formData[formNumber] = formData[formNumber] || {};
+        if (e.target.type === 'number') {
+            formData[formNumber].amount = parseFloat(e.target.value) || 0;
+        }
     });
 }
 
-async function handleFillingSubmit(event) {
-    event.preventDefault();
-    
+async function handleFillingSubmit(e) {
+    e.preventDefault();
     try {
-        const formData = new FormData(event.target);
-        console.log('Filling Form Data:', Object.fromEntries(formData));
-        
-        // Here you would typically send the data to your backend
+        const formData = new FormData(e.target);
+        console.log('Submitting filling form:', Object.fromEntries(formData));
         alert('Fuel filling submitted successfully!');
-        event.target.reset();
-        setDefaultDates();
-        
+        e.target.reset();
+        setDefaultDate();
     } catch (error) {
-        console.error('Error submitting filling form:', error);
-        alert('Error submitting form. Please try again.');
+        console.error('Error:', error);
+        alert('Error submitting form');
     }
 }
 
 async function handleRequisitionSubmit() {
     try {
-        // Validate forms
-        const forms = document.querySelectorAll('#requisitionForms form');
-        let isValid = true;
-        let totalAmount = 0;
-
-        forms.forEach(form => {
-            const formId = form.getAttribute('data-form-id');
-            const formData = requisitionData[formId] || {};
-
-            // Check required fields
-            form.querySelectorAll('[required]').forEach(field => {
-                if (!field.value) {
-                    isValid = false;
-                    field.classList.add('border-red-500');
-                } else {
-                    field.classList.remove('border-red-500');
-                }
-            });
-
-            // Add to total
-            if (formData.amount) {
-                totalAmount += parseFloat(formData.amount);
-            }
-        });
-
-        if (!isValid) {
-            throw new Error('Please fill in all required fields');
-        }
-
-        // Update total display
-        const totalAmountElement = document.getElementById('totalAmount');
-        const totalAlert = document.getElementById('totalAlert');
+        const total = Object.values(formData).reduce((sum, form) => {
+            return sum + (form.amount || 0);
+        }, 0);
         
-        if (totalAmountElement && totalAlert) {
-            totalAmountElement.textContent = totalAmount.toLocaleString();
-            totalAlert.classList.remove('hidden');
-        }
-
-        console.log('Requisition Data:', requisitionData);
-        console.log('Total Amount:', totalAmount);
-
-        // Here you would typically send the data to your backend
+        document.getElementById('totalAmount').textContent = total.toLocaleString();
+        document.getElementById('totalAlert').classList.remove('hidden');
+        
+        console.log('Form Data:', formData);
+        console.log('Total Amount:', total);
+        
         alert('Requisitions submitted successfully!');
-        
     } catch (error) {
-        console.error('Error submitting requisitions:', error);
-        alert(error.message || 'Error submitting requisitions. Please try again.');
+        console.error('Error:', error);
+        alert('Error submitting requisitions');
     }
 }
