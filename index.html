@@ -40,41 +40,41 @@
                 <form class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium mb-1">Vehicle Number</label>
-                        <select class="w-full p-2 border rounded" required>
+                        <select class="w-full p-2 border rounded" data-type="vehicle" name="vehicle" required>
                             <option value="">Select Vehicle</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Project Code</label>
-                        <select class="w-full p-2 border rounded" required>
+                        <select class="w-full p-2 border rounded" data-type="project" name="project" required>
                             <option value="">Select Project</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Current Mileage</label>
-                        <input type="number" class="w-full p-2 border rounded" placeholder="Enter current mileage" required>
+                        <input type="number" name="mileage" class="w-full p-2 border rounded" placeholder="Enter current mileage" required>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Amount Top Up (KES)</label>
-                        <input type="number" class="w-full p-2 border rounded" placeholder="Enter amount" required>
+                        <input type="number" name="amount" class="w-full p-2 border rounded" placeholder="Enter amount" required>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Litres Top Up</label>
-                        <input type="number" class="w-full p-2 border rounded" placeholder="Enter litres" required>
+                        <input type="number" name="litres" class="w-full p-2 border rounded" placeholder="Enter litres" required>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Top Up Date</label>
-                        <input type="date" class="w-full p-2 border rounded" required>
+                        <input type="date" name="date" class="w-full p-2 border rounded" required>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-1">Receipt Upload</label>
-                        <input type="file" accept="image/*,.pdf" class="w-full p-2 border rounded cursor-pointer" required>
+                        <input type="file" name="receipt" accept="image/*,.pdf" class="w-full p-2 border rounded cursor-pointer" required>
                     </div>
 
                     <button type="submit" class="w-full text-white py-2 px-4 rounded">
@@ -85,8 +85,10 @@
         </div>
 
         <!-- Fuel Requisition Form -->
-        <div id="requisition" class="tab-content">
-            <div id="requisition-forms"></div>
+        <div id="requisition" class="tab-content hidden">
+            <div id="requisition-forms">
+                <!-- Requisition forms will be added here dynamically -->
+            </div>
             
             <div id="total-alert" class="hidden my-4 border p-4 rounded">
                 Total Amount Requisited: KES <span id="total-amount">0</span>
@@ -98,7 +100,7 @@
                     Add Another Vehicle
                 </button>
                 
-                <button id="submit-all" class="bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+                <button id="submit-all" class="bg-green-700 text-white p-2 rounded hover:bg-green-800">
                     Submit All Requisitions
                 </button>
             </div>
