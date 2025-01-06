@@ -1,3 +1,4 @@
+// First part of script.js
 // Data Management
 let vehicles = [
     'KBH 952V', 'KBM 190H', 'KBP 540Q', 'KCK 951W', 'KCN 684B', 
@@ -101,6 +102,8 @@ function createRequisitionForm() {
         </div>
     `;
 }
+
+// Second part starts here
 function createFillingForm() {
     return `
         <div class="form-container">
