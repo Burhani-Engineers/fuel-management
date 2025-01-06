@@ -4,11 +4,7 @@ const vehicles = [
     'KCQ 103H', 'KCQ 251B', 'KCQ 257Q', 'KCR 853N', 'KCU 452S',
     'KCU 967G', 'KCV 952J', 'KCW 914H', 'KCW 952C', 'KCW 953C',
     'KCZ 652S', 'KDC 153R', 'KDD 553V', 'KDH 113Y', 'KDJ 027M',
-    'KDJ 028M', 'KDJ 184S', 'KDL 153W', 'KDM 452W', 'KDM 752Y',
-    'KDP 314F', 'KHMA 353L', 'KHMA 355L', 'KMEA 911T', 'KTCB 472V',
-    'KTCB 473V', 'KTCB 474V', 'KTCB 595W', 'ZF 8551', 'ZF 9776',
-    'UBF 245N', 'UBG 001T (62UN427K)', 'UBF 323N', 'UBF 568P',
-    'UBF 324N', 'UBE 247Z'
+    'KDJ 028M', 'KDJ 184S', 'KDL 153W', 'KDM 452W', 'KDM 752Y'
 ];
 
 const projects = [
@@ -19,75 +15,82 @@ const projects = [
     { code: '51268', name: 'Project 51268' },
     { code: '51302', name: 'Project 51302' },
     { code: '51307', name: 'Project 51307' },
-    { code: '51336', name: 'Project 51336' },
-    { code: '51355', name: 'Project 51355' },
-    { code: '51358', name: 'Project 51358' },
-    { code: '51365', name: 'Project 51365' },
-    { code: '51380', name: 'Project 51380' },
-    { code: '51302TAS', name: 'Project 51302TAS' },
-    { code: 'HQ', name: 'Headquarters' },
-    { code: 'POINT_MALL', name: 'The Point Mall' }
+    { code: '51336', name: 'Project 51336' }
 ];
 
-// Initialize Lucide icons
+// Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    lucide.createIcons();
-    
-    // Populate all dropdowns after DOM is loaded
-    populateDropdowns();
-    
-    // Add initial requisition form
-    createRequisitionForm();
-    
-    // Initialize tab functionality
-    initializeTabs();
-    
-    // Set up event listeners
-    setupEventListeners();
+    console.log('DOM fully loaded');
+    initializeApp();
 });
 
-function populateDropdowns() {
-    // Populate vehicle dropdowns
-    const vehicleSelects = document.querySelectorAll('select[data-type="vehicle"]');
-    vehicleSelects.forEach(select => {
+function initializeApp() {
+    // Initialize Lucide icons
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
+
+    // Immediately populate dropdowns
+    populateAllDropdowns();
+
+    // Set up event listeners for tabs
+    setupTabs();
+
+    // Initialize requisition form
+    createRequisitionForm();
+
+    // Set up other event listeners
+    setupEventListeners();
+}
+
+function populateAllDropdowns() {
+    console.log('Populating dropdowns');
+    
+    // Get all vehicle dropdowns
+    const vehicleDropdowns = document.querySelectorAll('select[data-type="vehicle"]');
+    console.log('Found vehicle dropdowns:', vehicleDropdowns.length);
+    
+    vehicleDropdowns.forEach(dropdown => {
         // Clear existing options
-        select.innerHTML = '<option value="">Select Vehicle</option>';
+        dropdown.innerHTML = '<option value="">Select Vehicle</option>';
         
-        // Add vehicle options
+        // Add new options
         vehicles.forEach(vehicle => {
             const option = document.createElement('option');
             option.value = vehicle;
             option.textContent = vehicle;
-            select.appendChild(option);
+            dropdown.appendChild(option);
         });
     });
 
-    // Populate project dropdowns
-    const projectSelects = document.querySelectorAll('select[data-type="project"]');
-    projectSelects.forEach(select => {
+    // Get all project dropdowns
+    const projectDropdowns = document.querySelectorAll('select[data-type="project"]');
+    console.log('Found project dropdowns:', projectDropdowns.length);
+    
+    projectDropdowns.forEach(dropdown => {
         // Clear existing options
-        select.innerHTML = '<option value="">Select Project</option>';
+        dropdown.innerHTML = '<option value="">Select Project</option>';
         
-        // Add project options
+        // Add new options
         projects.forEach(project => {
             const option = document.createElement('option');
             option.value = project.code;
             option.textContent = `${project.code} - ${project.name}`;
-            select.appendChild(option);
+            dropdown.appendChild(option);
         });
     });
 }
 
-function initializeTabs() {
+function setupTabs() {
     const tabs = document.querySelectorAll('.tab');
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // Remove active class from all tabs and content
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            
-            // Add active class to clicked tab and its content
+            document.querySelectorAll('.tab-content').forEach(c => {
+                c.classList.add('hidden');
+                c.classList.remove('active');
+            });
+
             tab.classList.add('active');
             const targetId = tab.getAttribute('data-tab');
             const targetContent = document.getElementById(targetId);
@@ -98,6 +101,8 @@ function initializeTabs() {
         });
     });
 }
+
+// Rest of your script.js remains the same...
 
 let formCount = 0;
 const formData = {};
