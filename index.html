@@ -3,27 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Burhani Engineers - Fuel Management Dashboard</title>
-    <!-- Ensure Lucide loads properly -->
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <title>Burhani Engineers - Fuel Management</title>
+    
+    <!-- Include Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Include Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gray-50">
-    <div class="max-w-4xl mx-auto p-4">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold">Burhani Engineers</h1>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4 max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Burhani Engineers</h1>
             <p class="text-gray-600">Fuel Management Dashboard</p>
         </div>
 
         <!-- Tabs -->
         <div class="mb-6">
-            <div class="grid grid-cols-2 gap-2 mb-4">
-                <button class="tab active p-3 rounded border flex items-center justify-center gap-2" data-tab="filling">
+            <div class="grid grid-cols-2 gap-4">
+                <button id="fillingTab" class="tab active p-4 rounded bg-white shadow text-center flex items-center justify-center gap-2">
                     <i data-lucide="fuel"></i>
                     Fuel Filling
                 </button>
-                <button class="tab p-3 rounded border flex items-center justify-center gap-2" data-tab="requisition">
+                <button id="requisitionTab" class="tab p-4 rounded bg-white shadow text-center flex items-center justify-center gap-2">
                     <i data-lucide="file-text"></i>
                     Fuel Requisition
                 </button>
@@ -31,77 +38,87 @@
         </div>
 
         <!-- Fuel Filling Form -->
-        <div id="filling" class="tab-content active">
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="mb-4 flex items-center gap-2">
+        <div id="fillingContent" class="tab-content">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
                     <i data-lucide="fuel"></i>
-                    <h2 class="text-xl font-bold">Fuel Filling Form</h2>
-                </div>
-                
-                <form class="space-y-4">
+                    Fuel Filling Form
+                </h2>
+
+                <form id="fillingForm" class="space-y-6">
+                    <!-- Vehicle Selection -->
                     <div>
-                        <label class="block text-sm font-medium mb-1">Vehicle Number</label>
-                        <select class="w-full p-2 border rounded" data-type="vehicle" name="vehicle" required>
+                        <label class="block text-sm font-medium mb-2">Vehicle Number</label>
+                        <select id="vehicleSelect" name="vehicle" class="w-full p-3 border rounded-md" required>
                             <option value="">Select Vehicle</option>
                         </select>
                     </div>
 
+                    <!-- Project Selection -->
                     <div>
-                        <label class="block text-sm font-medium mb-1">Project Code</label>
-                        <select class="w-full p-2 border rounded" data-type="project" name="project" required>
+                        <label class="block text-sm font-medium mb-2">Project Code</label>
+                        <select id="projectSelect" name="project" class="w-full p-3 border rounded-md" required>
                             <option value="">Select Project</option>
                         </select>
                     </div>
 
+                    <!-- Mileage -->
                     <div>
-                        <label class="block text-sm font-medium mb-1">Current Mileage</label>
-                        <input type="number" name="mileage" class="w-full p-2 border rounded" placeholder="Enter current mileage" required>
+                        <label class="block text-sm font-medium mb-2">Current Mileage</label>
+                        <input type="number" name="mileage" class="w-full p-3 border rounded-md" required>
                     </div>
 
+                    <!-- Amount -->
                     <div>
-                        <label class="block text-sm font-medium mb-1">Amount Top Up (KES)</label>
-                        <input type="number" name="amount" class="w-full p-2 border rounded" placeholder="Enter amount" required>
+                        <label class="block text-sm font-medium mb-2">Amount (KES)</label>
+                        <input type="number" name="amount" class="w-full p-3 border rounded-md" required>
                     </div>
 
+                    <!-- Litres -->
                     <div>
-                        <label class="block text-sm font-medium mb-1">Litres Top Up</label>
-                        <input type="number" name="litres" class="w-full p-2 border rounded" placeholder="Enter litres" required>
+                        <label class="block text-sm font-medium mb-2">Litres</label>
+                        <input type="number" name="litres" class="w-full p-3 border rounded-md" required>
                     </div>
 
+                    <!-- Date -->
                     <div>
-                        <label class="block text-sm font-medium mb-1">Top Up Date</label>
-                        <input type="date" name="date" class="w-full p-2 border rounded" required>
+                        <label class="block text-sm font-medium mb-2">Fill Date</label>
+                        <input type="date" name="date" class="w-full p-3 border rounded-md" required>
                     </div>
 
+                    <!-- Receipt -->
                     <div>
-                        <label class="block text-sm font-medium mb-1">Receipt Upload</label>
-                        <input type="file" name="receipt" accept="image/*,.pdf" class="w-full p-2 border rounded cursor-pointer" required>
+                        <label class="block text-sm font-medium mb-2">Receipt Upload</label>
+                        <input type="file" name="receipt" accept="image/*,.pdf" class="w-full p-3 border rounded-md" required>
                     </div>
 
-                    <button type="submit" class="w-full text-white py-2 px-4 rounded">
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition-colors">
                         Submit Fuel Filling
                     </button>
                 </form>
             </div>
         </div>
 
-        <!-- Fuel Requisition Form -->
-        <div id="requisition" class="tab-content hidden">
-            <div id="requisition-forms">
-                <!-- Requisition forms will be added here dynamically -->
-            </div>
-            
-            <div id="total-alert" class="hidden my-4 border p-4 rounded">
-                Total Amount Requisited: KES <span id="total-amount">0</span>
+        <!-- Requisition Form -->
+        <div id="requisitionContent" class="tab-content hidden">
+            <div id="requisitionForms" class="space-y-6">
+                <!-- Forms will be added here dynamically -->
             </div>
 
-            <div class="flex flex-col gap-4 mt-4">
-                <button id="add-vehicle" class="border border-gray-300 p-2 rounded flex items-center justify-center gap-2">
+            <!-- Total Alert -->
+            <div id="totalAlert" class="hidden mt-6 p-4 bg-white rounded-lg shadow">
+                <p class="text-lg">Total Amount Requisited: KES <span id="totalAmount">0</span></p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-6 space-y-4">
+                <button id="addVehicleBtn" class="w-full p-3 border-2 border-gray-300 rounded-md flex items-center justify-center gap-2 hover:border-green-600 hover:text-green-600 transition-colors">
                     <i data-lucide="plus-circle"></i>
                     Add Another Vehicle
                 </button>
                 
-                <button id="submit-all" class="bg-green-700 text-white p-2 rounded hover:bg-green-800">
+                <button id="submitAllBtn" class="w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition-colors">
                     Submit All Requisitions
                 </button>
             </div>
