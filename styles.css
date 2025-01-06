@@ -1,27 +1,189 @@
-body { 
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
+:root {
+    --forest-green: #2C5530;
+    --forest-green-light: #3D7445;
+    --forest-green-dark: #1A331D;
+    --grey-100: #f3f4f6;
+    --grey-200: #e5e7eb;
+    --grey-300: #d1d5db;
+    --grey-400: #9ca3af;
+    --grey-500: #6b7280;
+    --grey-600: #4b5563;
+    --grey-700: #374151;
+}
+
+body {
+    background-color: var(--grey-100);
+    color: var(--grey-700);
+}
+
+.tab-content:not(.active) {
+    display: none;
 }
 
 .tab {
-    padding: 10px 20px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-    cursor: pointer;
+    background-color: white;
+    border: 1px solid var(--grey-300);
+    transition: all 0.2s ease;
+}
+
+.tab:hover {
+    background-color: var(--grey-100);
 }
 
 .tab.active {
-    background: #2B513B;
+    background-color: var(--forest-green);
     color: white;
-    border-color: #2B513B;
+    border-color: var(--forest-green);
 }
 
-.form-container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+input, select {
+    border-color: var(--grey-300) !important;
+    transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--forest-green) !important;
+    box-shadow: 0 0 0 2px rgba(44, 85, 48, 0.1);
+}
+
+button[type="submit"], #submit-all {
+    background-color: var(--forest-green) !important;
+    transition: all 0.2s ease;
+}
+
+button[type="submit"]:hover, #submit-all:hover {
+    background-color: var(--forest-green-light) !important;
+}
+
+#add-vehicle {
+    border-color: var(--grey-300);
+    color: var(--grey-600);
+}
+
+#add-vehicle:hover {
+    border-color: var(--forest-green);
+    color: var(--forest-green);
+}
+
+#total-alert {
+    background-color: var(--grey-100);
+    border-color: var(--grey-300);
+    color: var(--grey-700);
+}
+
+.bg-white {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--grey-300);
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: var(--forest-green);
+    box-shadow: 0 0 0 2px rgba(44, 85, 48, 0.1);
+}
+
+/* Button Styles */
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: var(--forest-green);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: var(--forest-green-light);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--grey-300);
+}
+
+.btn-outline:hover {
+    border-color: var(--forest-green);
+    color: var(--forest-green);
+}
+
+/* Card Styles */
+.card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+/* Alert Styles */
+.alert {
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin: 1rem 0;
+}
+
+.alert-success {
+    background-color: #ecfdf5;
+    border: 1px solid #059669;
+    color: #065f46;
+}
+
+.alert-error {
+    background-color: #fef2f2;
+    border: 1px solid #dc2626;
+    color: #991b1b;
+}
+
+/* Responsive Styles */
+@media (max-width: 640px) {
+    .max-w-4xl {
+        padding: 1rem;
+    }
+
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+/* Loading State Styles */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading-spinner {
+    border: 3px solid var(--grey-200);
+    border-top: 3px solid var(--forest-green);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
